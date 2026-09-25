@@ -51,9 +51,11 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  GoogleApiKey: 'GoogleApiKey',
   PersonalData: 'PersonalData',
   Portfolio: 'Portfolio',
-  User: 'User'
+  User: 'User',
+  Session: 'Session'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -70,6 +72,18 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const GoogleApiKeyScalarFieldEnum = {
+  id: 'id',
+  label: 'label',
+  key: 'key',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GoogleApiKeyScalarFieldEnum = (typeof GoogleApiKeyScalarFieldEnum)[keyof typeof GoogleApiKeyScalarFieldEnum]
 
 
 export const PersonalDataScalarFieldEnum = {
@@ -99,11 +113,23 @@ export const UserScalarFieldEnum = {
   email: 'email',
   userName: 'userName',
   name: 'name',
-  hasedPassword: 'hasedPassword',
-  isAdmin: 'isAdmin'
+  passwordHash: 'passwordHash',
+  isAdmin: 'isAdmin',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const SessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+} as const
+
+export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -119,6 +145,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const GoogleApiKeyOrderByRelevanceFieldEnum = {
+  label: 'label',
+  key: 'key'
+} as const
+
+export type GoogleApiKeyOrderByRelevanceFieldEnum = (typeof GoogleApiKeyOrderByRelevanceFieldEnum)[keyof typeof GoogleApiKeyOrderByRelevanceFieldEnum]
 
 
 export const NullsOrder = {
@@ -160,8 +194,15 @@ export const UserOrderByRelevanceFieldEnum = {
   email: 'email',
   userName: 'userName',
   name: 'name',
-  hasedPassword: 'hasedPassword'
+  passwordHash: 'passwordHash'
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+export const SessionOrderByRelevanceFieldEnum = {
+  id: 'id'
+} as const
+
+export type SessionOrderByRelevanceFieldEnum = (typeof SessionOrderByRelevanceFieldEnum)[keyof typeof SessionOrderByRelevanceFieldEnum]
 

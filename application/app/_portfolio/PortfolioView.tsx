@@ -2,7 +2,8 @@ import type { AboutSection, ContactSection, ExperienceSection, Portfolio, Profil
 
 // Renders the public portfolio page. No hooks, so it works both as a Server
 // Component (app/page.tsx) and inside the editor's live preview.
-export default function PortfolioView({ data }: { data: Portfolio }) {
+// `account` replaces the Log In button, e.g. with the signed-in user's menu.
+export default function PortfolioView({ data, account }: { data: Portfolio; account?: React.ReactNode }) {
   const { profile } = data;
   const sections = data.sections.filter((s) => s.visible);
   const projects = sections.find((s) => s.type === "projects");
@@ -28,12 +29,14 @@ export default function PortfolioView({ data }: { data: Portfolio }) {
               </a>
             )}
           </div>
-          <a
-            href="/auth/login"
-            className="shrink-0 rounded-full border border-zinc-700 px-5 py-2 text-sm font-medium transition hover:border-emerald-400 hover:text-emerald-400"
-          >
-            Log In
-          </a>
+          {account ?? (
+            <a
+              href="/auth/login"
+              className="shrink-0 rounded-full border border-zinc-700 px-5 py-2 text-sm font-medium transition hover:border-emerald-400 hover:text-emerald-400"
+            >
+              Log In
+            </a>
+          )}
         </nav>
       </header>
 

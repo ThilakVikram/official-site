@@ -15,7 +15,8 @@ import {
   type Section,
   type SectionType,
 } from "../../_portfolio/content";
-import { lock, save } from "./actions";
+import { save } from "./actions";
+import { logout } from "@/app/auth/actions";
 import { Field, Icon, IconButton, ItemList, TagInput, move } from "./fields";
 
 type View = "edit" | "split" | "preview";
@@ -200,8 +201,8 @@ export default function Editor({ initial }: { initial: Portfolio }) {
           {saving ? "Saving" : "Save"}
           <kbd className="hidden lg:inline rounded bg-zinc-950/15 px-1.5 font-mono text-[10px]">⌘S</kbd>
         </button>
-        <form action={lock} onSubmit={(e) => dirty && !confirm("You have unsaved changes. Lock anyway?") && e.preventDefault()}>
-          <button type="submit" title="Lock editor" aria-label="Lock editor" className="grid h-9 w-9 place-items-center rounded-lg text-zinc-500 transition hover:bg-zinc-800 hover:text-zinc-100 cursor-pointer">
+        <form action={logout} onSubmit={(e) => dirty && !confirm("You have unsaved changes. Sign out anyway?") && e.preventDefault()}>
+          <button type="submit" title="Sign out" aria-label="Sign out" className="grid h-9 w-9 place-items-center rounded-lg text-zinc-500 transition hover:bg-zinc-800 hover:text-zinc-100 cursor-pointer">
             <Icon name="lock" />
           </button>
         </form>

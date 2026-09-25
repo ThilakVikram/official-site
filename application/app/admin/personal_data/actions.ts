@@ -1,14 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { isEditor } from "@/app/admin/edit/actions";
+import { isAdmin } from "@/app/_auth/session";
 import { createPersonalData, deletePersonalData, updatePersonalData } from "@/database/lib/personal_data";
 import { LIMITS, type ActionResult, type EntryInput, type PersonalDataEntry } from "./types";
 
 const MAX_BATCH = 50;
 
 async function guard(): Promise<ActionResult<never> | null> {
-  return (await isEditor()) ? null : { ok: false, error: "Your session has expired. Reload and unlock again." };
+  return (await isAdmin()) ? null : { ok: false, error: "Your session has expired. Reload and sign in again." };
 }
 
 // Server Actions can be called with any payload, so re-validate here.

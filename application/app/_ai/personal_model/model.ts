@@ -4,6 +4,7 @@ import { AIMessage, HumanMessage, ToolMessage, type AIMessageChunk, type BaseMes
 import { getPersonalDataCollection } from "./store_data_to_vdb";
 import { isEmailConfigured } from "./send_email";
 import { createContactOwnerTool } from "./tools/contact_owner";
+import { getActiveGoogleApiKey } from "@/database/lib/google_api_keys";
 
 // Personal RAG model: question -> Chroma retrieval -> Gemini (via LangChain) -> answer.
 // Gemini can also call tools (currently: emailing the owner on a visitor's behalf).
@@ -56,12 +57,16 @@ const prompt = ChatPromptTemplate.fromMessages([
   ["human", "{question}"],
 ]);
 
-let llm: ChatGoogleGenerativeAI | undefined;
-function getLlm() {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) throw new Error("GEMINI_API_KEY is not set");
-  llm ??= new ChatGoogleGenerativeAI({ model: MODEL, apiKey, temperature: 0.2, maxOutputTokens: 1024 });
-  return llm;
+// Uses the key made active at /admin/settings (falling back to GEMINI_API_KEY),
+// and rebuilds the client when that key changes.
+let llm: { apiKey: string; model: ChatGoogleGenerativeAI } | undefined;
+async function getLlm() {
+  const apiKey = await getActiveGoogleApiKey();
+  if (!apiKey) throw new Error("No Google API key: add one at /admin/settings or set GEMINI_API_KEY");
+  if (llm?.apiKey !== apiKey) {
+    llm = { apiKey, model: new ChatGoogleGenerativeAI({ model: MODEL, apiKey, temperature: 0.2, maxOutputTokens: 1024 }) };
+  }
+  return llm.model;
 }
 
 // Finds the personal-data entries most relevant to the question. The previous
@@ -103,7 +108,8 @@ async function prepare(question: string, { history = [], ownerName, clientId = "
   });
 
   const sources: Source[] = docs.map(({ id, category, title }) => ({ id, category, title }));
-  const model = tools.length ? getLlm().bindTools(tools) : getLlm();
+  const llm = await getLlm();
+  const model = tools.length ? llm.bindTools(tools) : llm;
   return { messages, tools, model, sources };
 }
 
