@@ -1,0 +1,10 @@
+model User { 
+  id    Int     @id @default(autoincrement()) 
+  email String  @unique
+  userName String @unique
+  name  String?
+  hasedPassword String?
+  isAdmin Boolean @default(false)
+  @@map("users")
+//   posts Post[]
+}

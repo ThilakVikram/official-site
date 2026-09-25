@@ -1,0 +1,19 @@
+// One piece of personal/professional information used by the personal RAG model.
+// Each row mirrors one document in the Chroma "personal_data" collection, and
+// `id` is that document's Chroma id, so both stores share the same key.
+model PersonalData {
+  id        String    @id @db.VarChar(64)
+  // skill, experience, project, education, email, about, ...
+  // Kept as a string so new categories don't need a migration.
+  category  String    @db.VarChar(50)
+  title     String?   @db.VarChar(191)
+  content   String    @db.Text
+  // Last time this row was written to the vector DB. Null, or older than
+  // updatedAt, means the vector DB copy is missing or stale.
+  syncedAt  DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([category])
+  @@map("personal_data")
+}

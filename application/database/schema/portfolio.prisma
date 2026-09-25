@@ -1,0 +1,9 @@
+// Single row (id = 1) holding the whole portfolio page as JSON.
+// Shape is defined and validated in app/_portfolio/content.ts.
+model Portfolio {
+  id        Int      @id @default(1)
+  content   Json
+  updatedAt DateTime @updatedAt
+
+  @@map("portfolio")
+}
