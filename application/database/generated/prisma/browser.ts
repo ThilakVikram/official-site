@@ -18,6 +18,11 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
+ * Model GoogleApiKey
+ * 
+ */
+export type GoogleApiKey = Prisma.GoogleApiKeyModel
+/**
  * Model PersonalData
  * 
  */
@@ -32,3 +37,8 @@ export type Portfolio = Prisma.PortfolioModel
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Session
+ * 
+ */
+export type Session = Prisma.SessionModel

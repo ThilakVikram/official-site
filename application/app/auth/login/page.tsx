@@ -1,5 +1,6 @@
 "use client"
-import { useRef, useState } from "react"
+import { use, useActionState, useState } from "react"
+import { login } from "../actions"
 
 const icons = {
     user: <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />,
@@ -48,8 +49,9 @@ function Field({ name, label, icon, type = "text", autoComplete }: { name: strin
     </div>
 }
 
-export default function Login() {
-    const formRef = useRef<HTMLFormElement>(null)
+export default function Login({ searchParams }: PageProps<"/auth/login">) {
+    const next = use(searchParams).next
+    const [state, formAction, pending] = useActionState(login, null)
     return <div className="min-h-screen w-full grid lg:grid-cols-2 bg-zinc-950 text-zinc-100">
         <aside className="relative hidden lg:flex flex-col justify-between overflow-hidden p-12 bg-zinc-900">
             <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-emerald-500/30 blur-3xl" />
@@ -65,9 +67,8 @@ export default function Login() {
             <span className="relative text-xs text-zinc-500">© {new Date().getFullYear()}</span>
         </aside>
         <main className="flex items-center justify-center px-6 py-16">
-            <form className="w-full max-w-sm flex flex-col gap-8" ref={formRef} onSubmit={(e) => {
-                e.preventDefault();
-            }}>
+            <form className="w-full max-w-sm flex flex-col gap-8" action={formAction}>
+                <input type="hidden" name="next" value={typeof next === "string" ? next : "/"} />
                 <div>
                     <span className="text-xs font-mono tracking-widest text-emerald-400 lg:hidden">// PORTFOLIO</span>
                     <h1 className="mt-2 text-4xl font-bold">Log In</h1>
@@ -77,11 +78,13 @@ export default function Login() {
                     <Field name="identifier" label="User Name / email" icon="user" autoComplete="username" />
                     <Field name="password" label="Password" icon="lock" type="password" autoComplete="current-password" />
                 </div>
+                {state?.error && <p role="alert" className="-mt-4 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">{state.error}</p>}
                 <button
                     type="submit"
-                    className="group mt-2 flex items-center justify-between rounded-full bg-emerald-400 pl-6 pr-2 py-2 font-semibold text-zinc-950 transition hover:bg-emerald-300 active:scale-[0.98] cursor-pointer"
+                    disabled={pending}
+                    className="group mt-2 flex items-center justify-between rounded-full bg-emerald-400 pl-6 pr-2 py-2 font-semibold text-zinc-950 transition hover:bg-emerald-300 active:scale-[0.98] disabled:opacity-60 cursor-pointer"
                 >
-                    Log In
+                    {pending ? "Logging in…" : "Log In"}
                     <span className="grid place-items-center w-10 h-10 rounded-full bg-zinc-950 text-emerald-400 transition-transform group-hover:translate-x-1">→</span>
                 </button>
                 <p className="text-sm text-zinc-400">

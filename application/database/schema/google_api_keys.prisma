@@ -1,0 +1,13 @@
+// Google (Gemini) API keys managed at /admin/settings. The assistant uses the
+// one active key; with none active it falls back to GEMINI_API_KEY in .env.
+model GoogleApiKey {
+  id        Int      @id @default(autoincrement())
+  label     String   @db.VarChar(100)
+  key       String   @db.VarChar(255)
+  // At most one row is true; database/lib/google_api_keys.ts keeps it that way.
+  isActive  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("google_api_keys")
+}

@@ -1,16 +1,29 @@
 services:
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: chromadb
+    restart: unless-stopped
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./chroma_db:/data
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+
   mysql:
     image: mysql:8.4
-    container_name: mysql_db
+    container_name: mysql
+    restart: unless-stopped
+    ports:
+      - "3308:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: portfolio
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin123
-    ports:
-      - "3308:3306"
+      MYSQL_USER: rtv
+      MYSQL_PASSWORD: rtv@11
     volumes:
       - ./mysql_data:/var/lib/mysql
-    restart: unless-stopped
+
 volumes:
   mysql_data:
